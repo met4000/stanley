@@ -5,6 +5,9 @@ if not defined iammaximised (
     exit
 )
 
+::Define %BS% as backspace
+for /f %%A in ('"prompt $H &echo on &for %%B in (1) do rem"') do set BS=%%A
+
 set fn=%date:/=.%.%time::=.%
 set fn=%fn:a=%
 set fn=%fn:d=%
@@ -29,21 +32,30 @@ title The Story
 echo [%time%] [LOAD] Loading log variables>>%fn%
 call src\log\variables.cmd
 
-::Main menu
+
+:MENU_MAIN
 echo [%time%] [%info%] Loading main menu>>%fn%
 call src\batch\menu\first.cmd
-pause
-
-if %menu_main_option% == "Start Game" goto START
+if (%menu_main_option%)==(0) goto MAIN_START
+if (%menu_main_option%)==(1) goto MAIN_OPTION
+if (%menu_main_option%)==(2) goto MAIN_EXIT
 
 echo [%time%] [%err%] Main Menu code completed, but no option triggered>>%fn%
-pause
-goto :END
+goto END
 
 ::Start game
-:START
+:MAIN_START
+echo [%time%] [%info%] Loading Story:Main>>%fn%
 src\story\main.cmd
+echo [%time%] [%err%] Main Story code completed, with no redirect>>%fn%
+goto END
 
+::Settings
+:MAIN_OPTION
+echo [%time%] [%info%] Loading Settings>>%fn%
+src\settings\main.cmd
+echo [%time%] [%err%] Settings code completed, with no redirect>>%fn%
+goto END
 
 
 
